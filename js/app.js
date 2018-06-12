@@ -21,6 +21,12 @@ let inProcess = 0;
 // time counter in seconds
 let tsec = 0;
 
+// move limit for 3 star
+const moveA = 20;
+
+// move limit for 2 star
+const moveB = 40;
+
 // set to true when time counter starts
 let timeStart = false;
 
@@ -158,10 +164,16 @@ deck.addEventListener('click', function(evt) {
   }
 });
 
+/*
+ * Handler to hide modal when close button is clicked
+ */
 closeBtn.addEventListener('click', function(){
   modal.style.display = 'none';
 });
 
+/*
+ * Handler to hide modal when anywhere is clicked
+ */
 window.addEventListener('click', function(event){
   if (event.target == modal) {
     modal.style.display = 'none';
@@ -185,6 +197,9 @@ function mismatchCardSymbol(elem) {
   elem.classList.add('mismatch');
 }
 
+/*
+ * Handler when cards match; freeze the cards and check winning condition
+ */
 function cardsMatch(elem) {
   openedCard.classList.add('match');
   elem.classList.add('match');
@@ -199,6 +214,9 @@ function cardsMatch(elem) {
   }
 }
 
+/*
+ * Handle when cards don't match; hide symbols and set inProcess to false
+ */
 function cardsNotMatch(elem) {
   hideCardSymbol(openedCard);
   openedCard = null;
@@ -206,8 +224,10 @@ function cardsNotMatch(elem) {
   inProcess = 0;
 }
 
-// callback for timer event; increment time by one second before game ends;
-// and setup next event
+/*
+ * Callback for timer event; increment time by one second before game ends;
+ * and setup next event
+*/
 function timeCounter() {
   timeElem.textContent = tsec;
   tsec++;
@@ -217,12 +237,15 @@ function timeCounter() {
   }
 }
 
+/*
+ * Update star display acoording to total moves taken
+ */
 function updateStarRating(cnt) {
-  if (cnt > 20) {
+  if (cnt > moveB) {
     stars[1].style.display = 'none';
     modalStars[1].style.display = 'none';
   }
-  else if (cnt > 10) {
+  else if (cnt > moveA) {
     stars[2].style.display = 'none';
     modalStars[2].style.display = 'none';
   }
