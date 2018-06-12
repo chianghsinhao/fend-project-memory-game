@@ -6,24 +6,32 @@ let cards = ['diamond', 'diamond', 'paper-plane-o', 'paper-plane-o',
              'leaf', 'leaf', 'bicycle', 'bicycle',
              'bomb', 'bomb', 'cube', 'cube'];
 
+// store the first opened card in one move
 let openedCard = null;
+
+// winning condition check
 let openedCnt = 0;
+
+// total number of moves
 let moveCnt = 0;
 
 // Prevent another event while an event is ongoing
 let inProcess = 0;
 
+// time counter in seconds
+let tsec = 0;
+
+// set to true when time counter starts
+let timeStart = false;
+
+// document elements
 let deck = document.querySelector('.deck');
 let stars = document.getElementsByClassName('fa-star');
 let move = document.querySelector('.moves');
 let modal = document.getElementById('myModal');
 let modalText = document.getElementById('modal-text');
-let starRating = document.getElementById
+let modalStars = [stars[3], stars[4], stars[5]];
 let closeBtn = document.getElementsByClassName("close")[0];
-
-// time counter in seconds
-let tsec = 0;
-let timeStart = false;
 let timeElem = document.getElementById('time-text');
 
 /*
@@ -65,10 +73,13 @@ function shuffle(array) {
     return array;
 }
 
+/*
+ * Use the card list to construct deck html
+ */
 function drawDeck() {
   deck.style.display = 'none';
 
-  // create a string of list of shuffled cards
+  // map card symbol 'x' to class 'fa-x'
   deck.innerHTML = cards.map(x => '<li class=\"card\"><i class=\"fa fa-' + x + '\"></i></li>').join('');
 
   deck.style.display = 'flex';
@@ -87,9 +98,11 @@ function drawDeck() {
 deck.addEventListener('click', function(evt) {
   let newCard = evt.target;
   if (evt.target.nodeName === 'I') {
+    // the symbol of the card is clicked, so the parent element is the card
     newCard = newCard.parentElement;
   }
-  // a card not matched yet
+
+  // a card not being flipped yet
   if (newCard.classList.contains('card') &&
       (!newCard.classList.contains('match'))) {
 
@@ -115,6 +128,7 @@ deck.addEventListener('click', function(evt) {
     else {
       moveCnt++;
       move.textContent = moveCnt;
+      updateStarRating(moveCnt);
 
       if (openedCard === newCard) {
         // flip back the 1st card
@@ -131,10 +145,10 @@ deck.addEventListener('click', function(evt) {
           inProcess = 0;
         }
         else {
-          hideCardSymbol(openedCard);
-          hideCardSymbol(newCard);
           mismatchCardSymbol(openedCard);
           mismatchCardSymbol(newCard);
+
+          // Note that inProcess is set to 0 in the timed event
           setTimeout(function() {
             cardsNotMatch(newCard);
           }, 1000);
@@ -143,6 +157,20 @@ deck.addEventListener('click', function(evt) {
     }
   }
 });
+
+closeBtn.addEventListener('click', function(){
+  modal.style.display = 'none';
+});
+
+window.addEventListener('click', function(event){
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
+});
+
+// shuffle on document ready
+cards = shuffle(cards);
+drawDeck();
 
 function displayCardSymbol(elem) {
   elem.classList.add('show', 'open');
@@ -153,13 +181,13 @@ function hideCardSymbol(elem) {
 }
 
 function mismatchCardSymbol(elem) {
-  elem.classList.remove('open');
+  elem.classList.remove('show', 'open');
   elem.classList.add('mismatch');
 }
 
 function cardsMatch(elem) {
-  openedCard.classList.toggle('match');
-  elem.classList.toggle('match');
+  openedCard.classList.add('match');
+  elem.classList.add('match');
   openedCard = null;
 
   openedCnt += 2;
@@ -184,32 +212,18 @@ function timeCounter() {
   timeElem.textContent = tsec;
   tsec++;
 
-  if (tsec > 30) {
-    stars[0].style.display = 'none';
-  }
-  else if (tsec > 20) {
-    stars[1].style.display = 'none';
-  }
-  else if (tsec > 10) {
-    stars[2].style.display = 'none';
-  }
-
   if (timeStart && (openedCnt < cards.length)) {
     setTimeout(timeCounter, 1000);
   }
 }
 
-closeBtn.addEventListener('click', function(){
-  modal.style.display = 'none';
-});
-
-window.addEventListener('click', function(event){
-  if (event.target == modal) {
-    modal.style.display = 'none';
+function updateStarRating(cnt) {
+  if (cnt > 20) {
+    stars[1].style.display = 'none';
+    modalStars[1].style.display = 'none';
   }
-});
-
-// shuffle on document ready
-cards = shuffle(cards);
-drawDeck();
-
+  else if (cnt > 10) {
+    stars[2].style.display = 'none';
+    modalStars[2].style.display = 'none';
+  }
+}

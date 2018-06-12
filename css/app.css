@@ -159,14 +159,18 @@ h1 {
 }
 
 /* Star rating in modal */
-#star-rating .stars {
+#star-rating {
+    display: inline-block;
+}
+
+.modal-stars {
     margin: 0;
     padding: 0;
     display: inline-block;
     margin: 0 5px 0 0;
 }
 
-#star-rating .stars li {
+.modal-stars li {
     list-style: none;
     display: inline-block;
 }
