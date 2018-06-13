@@ -139,34 +139,36 @@ deck.addEventListener('click', function(evt) {
       openedCard = newCard;
       inProcess = 0;
     }
+    else if (openedCard === newCard) {
+      // do nothing if clicking first card Again
+      inProcess = 0;
+
+      // XXX -- reviewer doesn't like the idea of flipping back
+      // flip back the 1st card
+      //hideCardSymbol(newCard);
+      //openedCard = null;
+      // also need to update moveCnt
+    }
     else {
       moveCnt++;
       move.textContent = moveCnt;
       updateStarRating(moveCnt);
 
-      if (openedCard === newCard) {
-        // flip back the 1st card
-        hideCardSymbol(newCard);
-        openedCard = null;
+      // check if the opened card match
+      let classList1 = openedCard.firstElementChild.classList;
+      let classList2 = newCard.firstElementChild.classList;
+      if (classList1.value === classList2.value) {
+        cardsMatch(newCard);
         inProcess = 0;
       }
       else {
-        // check if the opened card match
-        let classList1 = openedCard.firstElementChild.classList;
-        let classList2 = newCard.firstElementChild.classList;
-        if (classList1.value === classList2.value) {
-          cardsMatch(newCard);
-          inProcess = 0;
-        }
-        else {
-          mismatchCardSymbol(openedCard);
-          mismatchCardSymbol(newCard);
+        mismatchCardSymbol(openedCard);
+        mismatchCardSymbol(newCard);
 
-          // Note that inProcess is set to 0 in the timed event
-          setTimeout(function() {
-            cardsNotMatch(newCard);
-          }, 1000);
-        }
+        // Note that inProcess is set to 0 in the timed event
+        setTimeout(function() {
+          cardsNotMatch(newCard);
+        }, 1000);
       }
     }
   }
