@@ -15,8 +15,8 @@
 ## Dependencies
 1. The game uses font _font_awesome_ from [BootstrapCDN](https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css).
 2. The game uses font _Coda_ from [Google Fonts](https://fonts.googleapis.com/css?family=Coda).
-3. The shuffle function comes from [Stack Overflow](http://stackoverflow.com/a/2450976);
-4. The modal display comes from [W3Schools](https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal);
+3. The shuffle function comes from [Stack Overflow](http://stackoverflow.com/a/2450976).
+4. The modal display comes from [W3Schools](https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal).
 
 ## Instructions
 
