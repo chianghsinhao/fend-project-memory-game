@@ -110,67 +110,64 @@ function resetGame() {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 deck.addEventListener('click', function(evt) {
+  // ignore clicking on deck
+  if (evt.target.classList.contains('deck')) {
+    return;
+  }
+
   let newCard = evt.target;
   if (evt.target.nodeName === 'I') {
     // the symbol of the card is clicked, so the parent element is the card
     newCard = newCard.parentElement;
   }
 
-  // a card not being flipped yet
-  if (newCard.classList.contains('card') &&
-      (!newCard.classList.contains('match'))) {
+  // do nothing if the card is already opened
+  if (newCard.classList.contains('open')) {
+    return;
+  }
 
-    if (inProcess) {
-      return;
-    }
+  // avoid handling multiple clicking events
+  if (inProcess) {
+    return;
+  }
 
-    inProcess = 1;
+  inProcess = 1;
 
-    if (!timeStart) {
-      setTimeout(timeCounter, 1000);
-      timeStart = true;
-    }
+  if (!timeStart) {
+    setTimeout(timeCounter, 1000);
+    timeStart = true;
+  }
 
-    // flip the card
-    displayCardSymbol(newCard);
+  // flip the card
+  displayCardSymbol(newCard);
 
-    if (openedCard === null) {
-      // assign to opened card
-      openedCard = newCard;
-      inProcess = 0;
-    }
-    else if (openedCard === newCard) {
-      // do nothing if clicking first card Again
-      inProcess = 0;
+  if (openedCard === null) {
+    // assign to opened card
+    openedCard = newCard;
+    inProcess = 0;
+    return;
+  }
 
-      // XXX -- reviewer doesn't like the idea of flipping back
-      // flip back the 1st card
-      //hideCardSymbol(newCard);
-      //openedCard = null;
-      // also need to update moveCnt
-    }
-    else {
-      moveCnt++;
-      move.textContent = moveCnt;
-      updateStarRating(moveCnt);
+  // a second card is clicked
+  moveCnt++;
+  move.textContent = moveCnt;
+  updateStarRating(moveCnt);
 
-      // check if the opened card match
-      let classList1 = openedCard.firstElementChild.classList;
-      let classList2 = newCard.firstElementChild.classList;
-      if (classList1.value === classList2.value) {
-        cardsMatch(newCard);
-        inProcess = 0;
-      }
-      else {
-        mismatchCardSymbol(openedCard);
-        mismatchCardSymbol(newCard);
+  // check if the opened card match
+  let classList1 = openedCard.firstElementChild.classList;
+  let classList2 = newCard.firstElementChild.classList;
+  if (classList1.value === classList2.value) {
+    cardsMatch(newCard);
+    inProcess = 0;
+  }
+  else {
+    mismatchCardSymbol(openedCard);
+    mismatchCardSymbol(newCard);
 
-        // Note that inProcess is set to 0 in the timed event
-        setTimeout(function() {
-          cardsNotMatch(newCard);
-        }, 1000);
-      }
-    }
+    // Note that inProcess is set to 0 in the timed event
+    setTimeout(function() {
+      cardsNotMatch(newCard);
+    }, 1000);
   }
 });
 
