@@ -174,3 +174,15 @@ h1 {
     list-style: none;
     display: inline-block;
 }
+
+/* Play again button */
+.play-again-container {
+    display:block;
+    text-align: center;
+    width: 14%;
+    margin: auto;
+}
+
+.play-again {
+    display:block;
+}

@@ -37,7 +37,8 @@ let move = document.querySelector('.moves');
 let modal = document.getElementById('myModal');
 let modalText = document.getElementById('modal-text');
 let modalStars = [stars[3], stars[4], stars[5]];
-let closeBtn = document.getElementsByClassName("close")[0];
+let closeBtn = document.getElementsByClassName('close')[0];
+let playAgainBtn = document.getElementsByClassName('play-again')[0];
 let timeElem = document.getElementById('time-text');
 
 /*
@@ -47,22 +48,7 @@ let timeElem = document.getElementById('time-text');
  *   - add each card's HTML to the page
  */
 document.querySelector('.restart').addEventListener('click', function() {
-  cards = shuffle(cards);
-  drawDeck();
-
-  tsec = 0;
-  timeStart = false;
-  timeElem.textContent = 0;
-
-  openedCnt = 0;
-  openedCard = null;
-
-  for (let i = 0; i < stars.length; ++i) {
-    stars[i].style.display = 'inline-block';
-  }
-
-  moveCnt = 0;
-  move.textContent = 0;
+  resetGame();
 });
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -89,6 +75,28 @@ function drawDeck() {
   deck.innerHTML = cards.map(x => '<li class=\"card\"><i class=\"fa fa-' + x + '\"></i></li>').join('');
 
   deck.style.display = 'flex';
+}
+
+/*
+ * Reset everything on the game display
+ */
+function resetGame() {
+  cards = shuffle(cards);
+  drawDeck();
+
+  tsec = 0;
+  timeStart = false;
+  timeElem.textContent = 0;
+
+  openedCnt = 0;
+  openedCard = null;
+
+  for (let i = 0; i < stars.length; ++i) {
+    stars[i].style.display = 'inline-block';
+  }
+
+  moveCnt = 0;
+  move.textContent = 0;
 }
 
 /*
@@ -180,9 +188,16 @@ window.addEventListener('click', function(event){
   }
 });
 
-// shuffle on document ready
-cards = shuffle(cards);
-drawDeck();
+/*
+ * Handler to reset deck when play again button is clicked
+ */
+playAgainBtn.addEventListener('click', function(){
+  modal.style.display = 'none';
+  resetGame();
+});
+
+// reset on document ready
+resetGame();
 
 function displayCardSymbol(elem) {
   elem.classList.add('show', 'open');
